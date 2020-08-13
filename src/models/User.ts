@@ -21,10 +21,10 @@ class User {
     password: string;
 
     @CreateDateColumn()
-    createdat: Date;
+    created_at: Date;
 
     @UpdateDateColumn()
-    updatedat: Date;
+    updated_at: Date;
 }
 
 export default User;
