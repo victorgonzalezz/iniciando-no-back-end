@@ -5,11 +5,18 @@
      "outDir": "./dist",
      "rootDir": "./src",
     "strict": true,
+    "paths": {
+        "@modules/*": ["modules/*"],
+        "@config/*": ["congif/*"],
+        "@shared/*": ["shared/*"]
+    },
     "esModuleInterop": true,
     "skipLibCheck": true,
     "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./src",
+
   }
 }
