@@ -1,47 +1,36 @@
 import { Router } from "express";
 import multer from "multer";
-import uploadConfig from "../config/upload";
+import uploadConfig from "@config/upload";
+import { celebrate, Segments, Joi } from "celebrate";
 
-import CreateUserService from "../services/CreateUserService";
+import UsersController from "../controllers/UsersController";
+import UserAvatarController from "../controllers/UserAvatarController";
 
 import ensureAuthenticated from "../middlewares/ensureAuthenticated";
-import UddateUserAvatarService from "../services/UpdateUserAvatarService";
 
 const usersRouter = Router();
-const upload = multer(uploadConfig);
+const usersController = new UsersController();
+const userAvatarController = new UserAvatarController();
 
-usersRouter.post("/", async (request, response) => {
-    const { name, email, password } = request.body;
+const upload = multer(uploadConfig.multer);
 
-    const createUser = new CreateUserService();
-
-    const user = await createUser.execute({
-        name,
-        email,
-        password,
-    });
-
-    delete user.password;
-
-    return response.json(user);
-});
+usersRouter.post(
+    "/",
+    celebrate({
+        [Segments.BODY]: {
+            name: Joi.string().required(),
+            email: Joi.string().email().required(),
+            password: Joi.string().required(),
+        },
+    }),
+    usersController.create
+);
 
 usersRouter.patch(
     "/avatar",
     ensureAuthenticated,
     upload.single("avatar"),
-    async (request, response) => {
-        const updateUserAvatar = new UddateUserAvatarService();
-
-        const user = await updateUserAvatar.execute({
-            user_id: request.user.id,
-            avatarFilename: request.file.filename,
-        });
-
-        delete user.password;
-
-        return response.json(user);
-    }
+    userAvatarController.update
 );
 
 export default usersRouter;
