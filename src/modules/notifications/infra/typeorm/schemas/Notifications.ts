@@ -1,30 +1,31 @@
-import { getMongoRepository, MongoRepository } from "typeorm";
+import {
+    ObjectID,
+    Entity,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn,
+    ObjectIdColumn,
+} from 'typeorm';
 
-import INotificationsRepository from "@modules/notifications/repositories/INotificationsRepository";
-import ICreateNotificationDTO from "@modules/notifications/dtos/ICreateNotificationDTO";
+@Entity('notifications')
+class Notification {
+    @ObjectIdColumn()
+    id: ObjectID;
 
-import Notification from "../schemas/Notification";
+    @Column()
+    content: string;
 
-class NotificationsRepository implements INotificationsRepository {
-    private ormRepository: MongoRepository<Notification>;
+    @Column('uuid')
+    recipient_id: string;
 
-    constructor() {
-        this.ormRepository = getMongoRepository(Notification, "mongo");
-    }
+    @Column({ default: false })
+    read: boolean;
 
-    public async create({
-        content,
-        recipient_id,
-    }: ICreateNotificationDTO): Promise<Notification> {
-        const notification = this.ormRepository.create({
-            content,
-            recipient_id,
-        });
+    @CreateDateColumn()
+    created_at: Date;
 
-        await this.ormRepository.save(notification);
-
-        return notification;
-    }
+    @UpdateDateColumn()
+    updated_at: Date;
 }
 
-export default NotificationsRepository;
+export default Notification;
