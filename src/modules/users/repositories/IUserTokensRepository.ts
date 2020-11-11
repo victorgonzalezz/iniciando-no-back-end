@@ -1,11 +1,6 @@
-import User from "../infra/typeorm/entities/User";
-import ICreateUserDTO from "../dtos/ICreateUserDTO";
-import IFindAllProvidersDTO from "../dtos/IFindAllProvidersDTO";
+import UserToken from '../infra/typeorm/entities/UserToken';
 
-export default interface IUsersRepository {
-    findAllProviders(data: IFindAllProvidersDTO): Promise<User[]>;
-    findById(id: string): Promise<User | undefined>;
-    findByEmail(email: string): Promise<User | undefined>;
-    create(data: ICreateUserDTO): Promise<User>;
-    save(user: User): Promise<User>;
+export default interface IUserTokensRepository {
+    generate(user_id: string): Promise<UserToken>;
+    findByToken(token: string): Promise<UserToken | undefined>;
 }
